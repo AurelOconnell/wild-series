@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\CategoryRepository;
+use App\Repository\ProgramRepository;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController 
@@ -18,19 +19,22 @@ class CategoryController extends AbstractController
     ]);
   }
 
-    #[Route('/category/{categoryName}', name: 'category_show')]
-  public function show(int $id, CategoryRepository $categoryRepository): Response
+    #[Route('/category/{categoryName}', methods: ['GET'], name: 'category_show')]
+  public function show(string $categoryName, CategoryRepository $categoryRepository, ProgramRepository $programRepository): Response
   {
-    $category = $categoryRepository->findOneBy(['id' => $id]);
+    $category = $categoryRepository->findOneBy(['name' => $categoryName]);
 
     if (!$category) {
       throw $this->createNotFoundException(
-        'No program with id : ' . $id . ' found in program\'s table.'
+        'No category ' . $categoryName . ' found in category\'s table.'
       );
     }
 
+    $programs = $programRepository->findBy(['category' => $category->getId()], ['id' => 'DESC'], 3, 0);
+
     return $this->render('category/show.html.twig', [
       'category' => $category,
+      'programs' => $programs,
     ]);
   }
 }
