@@ -7,24 +7,30 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Repository\CategoryRepository;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/category', name: 'category_')]
 class CategoryController extends AbstractController 
 {
     #[Route('/category/', name: 'category_index')]
   public function index(CategoryRepository $categoryRepository): Response
   {
-    $categories = $categoryRepository->findAll(); // pas program mais category à mettre
+    $categories = $categoryRepository->findAll();
     return $this->render('category/index.html.twig', [
-      'programs' => $categories,
+      'categories' => $categories,
     ]);
   }
 
     #[Route('/category/{categoryName}', name: 'category_show')]
   public function show(int $id, CategoryRepository $categoryRepository): Response
   {
-    $categories = $categoryRepository->findAll(); // pas program mais category à mettre
-    return $this->render('category/index.html.twig', [
-      'programs' => $categories,
+    $category = $categoryRepository->findOneBy(['id' => $id]);
+
+    if (!$category) {
+      throw $this->createNotFoundException(
+        'No program with id : ' . $id . ' found in program\'s table.'
+      );
+    }
+
+    return $this->render('category/show.html.twig', [
+      'category' => $category,
     ]);
   }
 }
