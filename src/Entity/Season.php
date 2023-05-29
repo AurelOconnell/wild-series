@@ -18,7 +18,7 @@ class Season
 
     #[ORM\ManyToOne(inversedBy: 'seasons')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?program $program = null;
+    private ?Program $program = null;
 
     #[ORM\Column]
     private ?int $number = null;
@@ -42,12 +42,12 @@ class Season
         return $this->id;
     }
 
-    public function getProgram(): ?program
+    public function getProgram(): ?Program
     {
         return $this->program;
     }
 
-    public function setProgram(?program $program): self
+    public function setProgram(?Program $program): self
     {
         $this->program = $program;
 

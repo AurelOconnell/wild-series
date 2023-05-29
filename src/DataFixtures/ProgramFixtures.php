@@ -11,7 +11,7 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
 {
     const PROGRAMS = [
         [
-            'title' => 'Game of Thrones',
+            'title' => 'Games of Thrones',
             'synopsis' => 'Familles qui se mettent sur la tronche pour se poser sur un fauteuil',
             'country' => 'USA',
             'year' => '2011',

@@ -9,16 +9,37 @@ use Doctrine\Persistence\ObjectManager;
 
 class SeasonFixtures extends Fixture implements DependentFixtureInterface
 {
+    const SEASONS = [
+        [
+            'number' => 1,
+            'program' => 'Games of Thrones',
+            'year' => '2011',
+            'description' => 'Spoiler alert : Sean Bean meurt à la fin.'
+        ],
+        [
+            'number' => 2,
+            'program' => 'Games of Thrones',
+            'year' => '2012',
+            'description' => 'Ca continue à se battre pour un tabouret, à la fin 2 ou 3 personnes meurent, tout ça.'
+        ],
+        [
+            'number' => 3,
+            'program' => 'Games of Thrones',
+            'year' => '2013',
+            'description' => 'Le nain qui boit et sait des trucs, continue son petit bonhomme de chemin.'
+        ]
+    ];
     public function load(ObjectManager $manager): void
     {
-        //src/DataFixtures/SeasonFixtures.php
-        $season = new Season();
-        $season->setNumber(1);
-        $season->setProgram($this->getReference('program_Game of Thrones'));
-        $season->setYear(2011);
-        $season->setDescription('Spoiler alert : Sean Bean meurt à la fin.');
-        $this->addReference('season1_Game of Thrones', $season);
-        $manager->persist($season);
+        foreach (self::SEASONS as $seasonData) {
+            $season = new Season();
+            $season->setNumber($seasonData['number']);
+            $season->setProgram($this->getReference('program_' . $seasonData['program']));
+            $season->setYear($seasonData['year']);
+            $season->setDescription($seasonData['description']);
+            $manager->persist($season);
+            $this->addReference('season' . $seasonData['number'] . '_' . $seasonData['program'], $season);
+        }
 
         $manager->flush();
     }
