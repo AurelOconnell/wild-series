@@ -7,9 +7,11 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
+use Faker\Factory;
+
 class SeasonFixtures extends Fixture implements DependentFixtureInterface
 {
-    const SEASONS = [
+    /*const SEASONS = [
         [
             'number' => 1,
             'program' => 'Games of Thrones',
@@ -39,6 +41,26 @@ class SeasonFixtures extends Fixture implements DependentFixtureInterface
             $season->setDescription($seasonData['description']);
             $manager->persist($season);
             $this->addReference('season' . $seasonData['number'] . '_' . $seasonData['program'], $season);
+        }
+
+        $manager->flush();
+    }*/
+
+    public function load(ObjectManager $manager): void
+    {
+        $faker = Factory::create();
+
+        foreach (ProgramFixtures::PROGRAMS as $programData) {
+            for ($i = 0; $i <= 5; $i++) {
+                $season = new Season();
+                $season->setNumber($i);
+                $season->setYear($faker->year());
+                $season->setDescription($faker->paragraphs(3, true));
+                $season->setProgram($this->getReference('program_' . $programData['title']));
+                $this->addReference('season' . $i . '_' . $programData['title'], $season);
+
+                $manager->persist($season);
+            }
         }
 
         $manager->flush();
