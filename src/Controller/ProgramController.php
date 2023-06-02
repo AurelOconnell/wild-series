@@ -24,20 +24,20 @@ class ProgramController extends AbstractController
     ]);
   }
 
-  #[Route('/show/{id<^[0-9]+$>}', name: 'show')]
-  public function show(int $id, ProgramRepository $programRepository): Response
+  #[Route('/show/{programId<^[0-9]+$>}', name: 'show')]
+  public function show(ProgramRepository $programRepository, Program $programId): Response
   {
-    $program = $programRepository->findOneBy(['id' => $id]);
-    $seasons = $program->getSeasons();
+//    $program = $programRepository->findOneBy(['id' => $id]);
+    $seasons = $programId->getSeasons();
 
-    if (!$program) {
+    if (!$programId) {
       throw $this->createNotFoundException(
-        'No program with id : ' . $id . ' found in program\'s table.'
+        'No program with id : ' . $programId . ' found in program\'s table.'
       );
     }
 
     return $this->render('program/show.html.twig', [
-      'program' => $program,
+      'program' => $programId,
       'seasons' => $seasons,
     ]);
   }

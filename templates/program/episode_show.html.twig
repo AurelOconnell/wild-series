@@ -8,6 +8,6 @@
     <h1>{{ episode.title }}</h1>
     <h2> Résumé de l'épisode : {{ episode.synopsis }}</h2>
 
-    <a href="{{ path('program_show', {id: program.id}) }}">
+    <a href="{{ path('program_show', {programId: program.id}) }}">
         Retour au programme
 {% endblock body %}
