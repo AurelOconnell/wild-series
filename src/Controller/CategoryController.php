@@ -8,16 +8,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\CategoryRepository;
 use App\Repository\ProgramRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController 
 {
   #[Route('/new', name: 'new')]
-  public function new(): Response
+  public function new(Request $request, CategoryRepository $categoryRepository): Response
   {
     $category = new Category();
 
     $form = $this->createForm(CategoryType::class, $category);
+
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted()) {
+      $categoryRepository->save($category, true);
+      return $this->redirectToRoute('category_index');
+    }
 
     return $this->render('category/new.html.twig', [
       'form' => $form,
