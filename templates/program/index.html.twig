@@ -7,7 +7,7 @@
 <h4><a href="{{ path('program_new')}}">Ajouter une nouvelle série </a></h4>
 {% for program in programs %}
 <div>
-    <h2>{{ loop.index }} / {{ program.title }} - Catégorie : {{ program.category.name}}</h2>
+    <h2>{{ program.title }} - Catégorie : {{ program.category.name}}</h2>
     <p>{{ program.synopsis }}</p>
     {# Lien vers la fiche de la série : #}
     <a href="{{ path("program_show", { programId: program.id }) }}">Voir la fiche</a>
