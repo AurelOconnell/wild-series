@@ -15,17 +15,20 @@ class ActorFixtures extends Fixture
     {
         $faker = Factory::create();
 
+        $programs = $manager->getRepository(Program::class)->findAll();
+
         foreach (ProgramFixtures::PROGRAMS as $programData) {
             for ($i = 0; $i <= 10; $i++) {
                 $actor = new Actor();
                 $actor->setName($faker->firstname() . " " . $faker->lastname());
-                $actor->addProgram($this->getReference('program_' . $faker->numberBetween(1,5)));
-                $actor->addProgram($this->getReference('program_' . $faker->numberBetween(1,5)));
-                $actor->addProgram($this->getReference('program_' . $faker->numberBetween(1,5)));
-                $manager->persist($actor);
-            }
 
-            $manager->flush();
+                $randomPrograms = $faker->randomElements($programs, 3);
+                foreach ($randomPrograms as $program) {
+                    $actor->addProgram($program);
+                }
+            $manager->persist($actor);
+        }
+        $manager->flush();
         }
     }
 
