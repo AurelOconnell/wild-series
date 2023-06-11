@@ -11,7 +11,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ProgramRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 
 
 #[Route('/program', name: 'program_')]
@@ -37,12 +40,18 @@ class ProgramController extends AbstractController
   }
 
   #[Route('/', name: 'index')]
-  public function index(ProgramRepository $programRepository): Response
+  public function index(ProgramRepository $programRepository, RequestStack $requestStack): Response
   {
     $programs = $programRepository->findAll();
     return $this->render('program/index.html.twig', [
       'programs' => $programs,
     ]);
+
+    $session = $requestStack->getSession();
+    if (!$session->has('total')) {
+        $session->set('total', 0);
+    }
+    $total = $session->get('total');
   }
 
   #[Route('/show/{programId<^[0-9]+$>}', name: 'show')]
